@@ -10,3 +10,105 @@ const timeGauge = document.getElementById("timeGauge");
 const progress = document.getElementById("progress");
 const scoreDiv = document.getElementById("score");
 
+//Questions
+let questions = [
+    {
+        question : "What is the best computer to code on?",
+        imgSrc : "img/html.png",
+        choiceA : 'Correct',
+        choiceB: 'Wrong',
+        choiceC: 'Wrong',
+        correct: 'A'
+    }, {
+        question : "Why is CSS the most hated language?",
+        imgSrc : "img/css.png",
+        choiceA : 'Wrong',
+        choiceB: 'Correct',
+        choiceC: 'Wrong',
+        correct: 'B'
+    }, {
+        question : "Does Quinton prefer Vanilla JS, JQuery, or Vanilla Ice Cream?",
+        imgSrc : "img/js.png",
+        choiceA : 'Wrong',
+        choiceB: 'Wrong',
+        choiceC: 'Correct',
+        correct: 'C'
+    }
+]
+
+
+//Variables
+const lastQuestion = questions.length - 1;
+let runningQuestion = 0;
+let count = 0
+const questionTime = 10; // 10 seconds
+const gaugeWidth = 150; // 150px
+const gaugeUnit = gaugeWidth / questionTime;
+let TIMER;
+let score = 0;
+
+//Rendering the question
+function renderQuestion(){
+    let q = questions[runningQuestion];
+
+    question.innerHTML = "<p>"+ q.question +"</p>";
+    qImg.innerHTML = "<img src="+ q.imgSrc +">";
+    choiceA.innerHTML = q.choiceA;
+    choiceB.innerHTML = q.choiceB;
+    choiceC.innerHTML = q.choiceC;
+}
+
+start.addEventListener('click', startQuiz);
+
+// Start Quiz Function
+function startQuiz(){
+    start.style.display = "none";
+    renderQuestion();
+    quiz.style.display = "block";
+    renderProgress();
+    renderCounter();
+    TIMER = setInterval(renderCounter, 1000);
+}
+
+//Render Progress
+function renderProgress(){
+    for(let qIndex = 0; qIndex <= lastQuestion; qIndex++){
+        progress.innerHTML += "<div class='prog' id="+qIndex +"></div>";
+    }
+}
+
+// Counter Render
+
+function renderCounter(){
+    if (count <= questionTime){
+        counter.innerHTML = count;
+        timeGauge.style.width = count * gaugeUnit + "px";
+        count++
+    } else {
+        count = 0;
+    }
+}
+
+//checkAnswer
+function checkAnswer(answer){
+    if (answer === questions[runningQuestion].correct){
+        //answer is correct
+        score++
+        // change progress color to green
+        answerIsCorrect();
+    } else {
+        //answer is wrong
+        //change progress color to red
+        answerIsWrong();
+    }
+}
+
+// Answer is correct
+function answerIsCorrect(){
+    document.getElementById(runningQuestion).style.backgroundColor = "#0f0";
+}
+
+// Answer is wrong
+function answerIsWrong(){
+    document.getElementById(runningQuestion).style.backgroundColor = "#f00";
+}
