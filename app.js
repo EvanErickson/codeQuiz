@@ -8,31 +8,31 @@ const choiceC = document.getElementById("C");
 const counter = document.getElementById("counter");
 const timeGauge = document.getElementById("timeGauge");
 const progress = document.getElementById("progress");
-const scoreDiv = document.getElementById("score");
+const scoreDiv = document.getElementById("scoreContainer");
 
 //Questions
 let questions = [
     {
         question : "What is the best computer to code on?",
         imgSrc : "img/html.png",
-        choiceA : 'Correct',
-        choiceB: 'Wrong',
-        choiceC: 'Wrong',
+        choiceA : 'Mac',
+        choiceB: 'PC',
+        choiceC: 'iPad',
         correct: 'A'
     }, {
         question : "Why is CSS the most hated language?",
         imgSrc : "img/css.png",
-        choiceA : 'Wrong',
-        choiceB: 'Correct',
-        choiceC: 'Wrong',
+        choiceA : 'Bootstrap',
+        choiceB: 'Floats',
+        choiceC: 'Flexbox',
         correct: 'B'
     }, {
         question : "Does Quinton prefer Vanilla JS, JQuery, or Vanilla Ice Cream?",
         imgSrc : "img/js.png",
-        choiceA : 'Wrong',
-        choiceB: 'Wrong',
-        choiceC: 'Correct',
-        correct: 'C'
+        choiceA : 'Vanilla JS',
+        choiceB: 'JQuery',
+        choiceC: 'Vanilla Ice Cream',
+        correct: 'A'
     }
 ]
 
@@ -86,6 +86,16 @@ function renderCounter(){
         count++
     } else {
         count = 0;
+        //change progress bar to red
+        answerIsWrong();
+        if (runningQuestion < lastQuestion){
+            runningQuestion++;
+            renderQuestion();
+        } else {
+            // end the quiz and show the score
+            clearInterval(TIMER);
+            scoreRender();
+        }
     }
 }
 
@@ -101,6 +111,15 @@ function checkAnswer(answer){
         //change progress color to red
         answerIsWrong();
     }
+    count = 0;
+    if (runningQuestion < lastQuestion){
+        runningQuestion++;
+        renderQuestion();
+    } else {
+        // end the quiz and show the score
+        clearInterval(TIMER);
+        scoreRender();
+    }
 }
 
 // Answer is correct
@@ -111,4 +130,21 @@ function answerIsCorrect(){
 // Answer is wrong
 function answerIsWrong(){
     document.getElementById(runningQuestion).style.backgroundColor = "#f00";
+}
+
+// score render
+function scoreRender(){
+    scoreDiv.style.display = "block";
+
+    //calculate the correct percentage of questions
+    const scorePercent = Math.round(100 * score/questions.length);
+
+    //choose img based on score
+    let img = (scorePercent >= 80) ? "img/5.png" :
+                (scorePercent >= 60) ? "img/3.png" :
+                (scorePercent >= 20) ? "img/2.png" :
+                "img/1.png";
+        
+        scoreDiv.innerHTML = "<img src="+ img +">";
+        scoreDiv.innerHTML += "<p>"+ scorePercent +"%</p>";
 }
